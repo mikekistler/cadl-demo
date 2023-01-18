@@ -1,4 +1,5 @@
 import "@cadl-lang/rest";
+import "./library.cadl";
 
 using Cadl.Http;
 @service({
@@ -15,19 +16,21 @@ model Widget {
   color: "red" | "blue";
 }
 
-@error
-model Error {
-  code: int32;
-  message: string;
+model Gadget {
+  @visibility("read", "update")
+  @path id: string;
+  height: float32;
+  width: float32;
+  color: "green" | "yellow";
 }
 
 @route("/widgets")
 @tag("Widgets")
-interface Widgets {
-  @get list(): Widget[] | Error;
-  @get read(@path id: string): Widget | Error;
-  @post create(...Widget): Widget | Error;
-  @patch update(...Widget): Widget | Error;
-  @delete delete(@path id: string): void | Error;
+interface Widgets extends ResourceInterface<Widget>{
   @route("{id}/analyze") @post analyze(@path id: string): string | Error;
+}
+
+@route("/gadgets")
+@tag("Gadgets")
+interface Gadgets extends ResourceInterface<Gadget> {
 }

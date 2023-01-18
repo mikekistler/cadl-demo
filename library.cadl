@@ -1,0 +1,17 @@
+import "@cadl-lang/rest";
+
+using Cadl.Http;
+
+@error
+model Error {
+  code: int32;
+  message: string;
+}
+
+interface ResourceInterface<T> {
+  @get list(): T[] | Error;
+  @get read(@path id: string): T | Error;
+  @put create(@body body: T): T | Error;
+  @patch update(@body body: T): T | Error;
+  @delete delete(@path id: string): void | Error;
+}
